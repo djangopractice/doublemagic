@@ -11,4 +11,5 @@ class Example(models.Model):
 
     def name_in_page(self, url):
         resp = self._get_page(url)
-        return self.name in resp.content
+        resp.close()
+        return self.name in str(resp.content)

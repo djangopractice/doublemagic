@@ -24,14 +24,18 @@ class ExampleTestCase(TestCase):
 
     @patch('example.models.Example._get_page')
     def test_name_in_page(self, getpage):
-        resp = MagicMock()
-        resp.content = 'Text that contains {} in it'.format(self.example.name)
-        getpage.return_value = resp
+        getpage.return_value = MagicMock(
+            content='Text that contains {} in it'.format(self.example.name))
         self.assertTrue(self.example.name_in_page(MagicMock()))
 
     @patch('example.models.Example._get_page')
     def test_name_in_page_not(self, getpage):
-        resp = MagicMock()
-        resp.content = 'Text that does not contain the name'
-        getpage.return_value = resp
+        getpage.return_value = MagicMock(content='Text that does not contain the name')
         self.assertFalse(self.example.name_in_page(MagicMock()))
+
+    @patch('example.models.Example._get_page')
+    def test_name_in_page_closes_response(self, getpage):
+        resp = MagicMock()
+        getpage.return_value = resp
+        self.example.name_in_page(MagicMock())
+        resp.close.assert_called_once_with()
