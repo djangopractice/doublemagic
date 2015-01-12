@@ -18,6 +18,13 @@ class ExampleTestCase(TestCase):
         req.assert_called_once_with('GET', url)
 
     @patch('example.models.Example._get_page')
+    def test_example_page_has_name_calls_get_page(self, getpage):
+        example = Example.objects.get(name='Example 1')
+        url = MagicMock()
+        example.name_in_page(url)
+        getpage.assert_called_once_with(url)
+
+    @patch('example.models.Example._get_page')
     def test_example_page_has_name(self, getpage):
         example = Example.objects.get(name='Example 1')
         resp = MagicMock()
