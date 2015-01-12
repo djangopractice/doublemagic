@@ -24,3 +24,11 @@ class ExampleTestCase(TestCase):
         resp.content = 'Text that contains {} in it'.format(example.name)
         getpage.return_value = resp
         self.assertTrue(example.name_in_page(MagicMock()))
+
+    @patch('example.models.Example._get_page')
+    def test_example_page_has_name_not(self, getpage):
+        example = Example.objects.get(name='Example 1')
+        resp = MagicMock()
+        resp.content = 'Text that does not contain the name'
+        getpage.return_value = resp
+        self.assertFalse(example.name_in_page(MagicMock()))
